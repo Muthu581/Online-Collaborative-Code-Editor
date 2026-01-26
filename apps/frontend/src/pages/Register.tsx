@@ -7,6 +7,7 @@ import { IP_ADDRESS } from '../Globle';
 
 const Register = () => {
     const [name, setName] = useState<string>("");
+    const [phoneNumber, setPhoneNumber] = useState<string>("");
     const [roomId, setRoomId] = useState<string>("");
     const [isAdmin, setIsAdmin] = useState<boolean>(false);
 
@@ -23,27 +24,41 @@ const Register = () => {
         return id.toString();
     }
 
+    const generateUniqueUsername = () => {
+        if (name && phoneNumber) {
+            return `${name}_${phoneNumber.slice(-4)}`;
+        }
+        return name;
+    }
+
+    const generateAvatarUrl = () => {
+        const uniqueName = generateUniqueUsername();
+        return `https://ui-avatars.com/api/?name=${encodeURIComponent(uniqueName)}&background=random&color=fff&bold=true`;
+    }
+
     const initializeSocket = () => {
         setLoading(true);
         let GeneratedId = "";
         if (user.id == "") {
             GeneratedId = generateId();
+            const uniqueUsername = generateUniqueUsername();
             setUser({
                 id: GeneratedId,
-                name: name,
+                name: uniqueUsername,
                 roomId: "",
                 isAdmin: isAdmin
             });
         }
 
         if (!socket || socket.readyState === WebSocket.CLOSED) {
+            const uniqueUsername = generateUniqueUsername();
             const u = {
                 id: user.id == "" ? GeneratedId : user.id,
-                name: name,
+                name: uniqueUsername,
                 isAdmin: isAdmin
             }
-            if(name == "") {
-                alert("Please enter a name to continue");
+            if(name == "" || phoneNumber == "") {
+                alert("Please enter both name and phone number to continue");
                 setLoading(false);
                 return;
             }
@@ -65,9 +80,10 @@ const Register = () => {
                 if (data.type == "roomId") {
                     setRoomId(data.roomId);
                     console.log("Room ID : ", data.roomId);
+                    const uniqueUsername = generateUniqueUsername();
                     setUser({
                         id: user.id == "" ? GeneratedId : user.id,
-                        name: name,
+                        name: uniqueUsername,
                         roomId: data.roomId,
                         isAdmin: isAdmin
                     });
@@ -134,16 +150,46 @@ const Register = () => {
         <p className="text-gray-400 mt-2 text-sm">Synchronized real-time collaboration</p>
       </div>
 
+      {/* Avatar Preview */}
+      {name && phoneNumber && (
+        <div className="flex justify-center mb-6">
+          <img
+            src={generateAvatarUrl()}
+            alt="User Avatar"
+            className="w-20 h-20 rounded-full border-2 border-blue-500/50 shadow-lg"
+          />
+        </div>
+      )}
+
+      {/* Unique Username Display */}
+      {name && phoneNumber && (
+        <div className="text-center mb-6 p-3 bg-blue-500/10 rounded-lg border border-blue-500/20">
+          <p className="text-xs font-semibold text-gray-500 uppercase tracking-widest mb-1">Your Unique ID</p>
+          <p className="text-lg font-bold text-blue-400">{generateUniqueUsername()}</p>
+        </div>
+      )}
+
       {/* Form Fields */}
       <div className="space-y-6">
         <div className="group">
-          <label className="block text-xs font-semibold text-gray-500 uppercase tracking-widest mb-2 ml-1">Username</label>
+          <label className="block text-xs font-semibold text-gray-500 uppercase tracking-widest mb-2 ml-1">Name</label>
           <input
             type="text"
-            placeholder="eg: dev_master"
+            placeholder="eg: John"
             value={name}
             onChange={(e) => setName(e.target.value)}
             className="w-full px-5 py-4 rounded-xl bg-white/5 border border-white/10 focus:border-blue-500/50 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all duration-300 placeholder:text-gray-600"
+          />
+        </div>
+
+        <div className="group">
+          <label className="block text-xs font-semibold text-gray-500 uppercase tracking-widest mb-2 ml-1">Phone Number</label>
+          <input
+            type="tel"
+            placeholder="eg: 1234567890"
+            value={phoneNumber}
+            onChange={(e) => setPhoneNumber(e.target.value.replace(/\D/g, '').slice(0, 10))}
+            className="w-full px-5 py-4 rounded-xl bg-white/5 border border-white/10 focus:border-purple-500/50 focus:ring-4 focus:ring-purple-500/10 outline-none transition-all duration-300 placeholder:text-gray-600"
           />
         </div>
 
