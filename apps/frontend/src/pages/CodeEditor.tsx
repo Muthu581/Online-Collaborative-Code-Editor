@@ -216,7 +216,7 @@ const CodeEditor: React.FC = () => {
     >
       <option>javascript</option>
       <option>python</option>
-      <option>cpp</option>
+      
     </select>
 
     {user.isAdmin && (
@@ -286,18 +286,6 @@ const CodeEditor: React.FC = () => {
                 </div>
               ))}
           </div>
-
-           {/* Input */}
-<div className="p-3 sm:p-4 rounded-xl bg-gradient-to-br from-purple-900/40 to-indigo-900/40 
-  border border-purple-500/30 shadow-lg">
-  <h3 className="font-semibold mb-2 text-sm sm:text-base text-purple-300">⌨ Input</h3>
-  <textarea
-    value={input}
-    onChange={(e) => setInput(e.target.value)}
-    className="w-full h-20 sm:h-28 rounded-lg p-2 sm:p-3 bg-slate-800/70 text-white text-sm border border-slate-600 
-      focus:ring-2 focus:ring-purple-400 transition-all"
-  />
-</div>
 
 {/* Output */}
 <div className="p-3 sm:p-4 rounded-xl bg-gradient-to-br from-green-900/40 to-emerald-900/40 

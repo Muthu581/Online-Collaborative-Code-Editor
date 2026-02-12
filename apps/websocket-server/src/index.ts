@@ -203,6 +203,18 @@ async function process() {
           }
         });
       }
+
+      // handle chat messages and send them to all users in the room
+      if (data.type === "chat-message") {
+        const message = {
+          user: data.user,
+          text: data.text,
+          timestamp: new Date().toISOString(),
+        };
+        rooms[roomId].forEach((user: any) => {
+          user.ws.send(JSON.stringify({ type: "chat-message", message }));
+        });
+      }
     });
 
     ws.on("close", () => {
