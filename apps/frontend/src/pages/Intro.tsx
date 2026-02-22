@@ -5,10 +5,73 @@ const Intro = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="w-full bg-[#0a0a0c] text-white selection:bg-purple-500/30">
-      
-      {/* 🌌 HERO SECTION: Immersive Dark Mode with Mesh Gradients */}
+
+    
+
+   <div className="w-full bg-[#0a0a0c] text-white selection:bg-purple-500/30">
+      {/* 🌌 HERO SECTION */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+        
+        <header className="fixed top-0 left-0 w-full z-50 backdrop-blur-md bg-black/30 border-b border-white/5">
+          <div className="max-w-7xl mx-auto px-6 py-4 flex items-center">
+            
+            {/* LOGO */}
+            <div
+              className="flex items-center gap-3 cursor-pointer"
+              onClick={() => navigate("/")}
+            >
+              <img
+                src="/G Collab logo (2).png"
+                alt="Collab Logo"
+                className="w-10 h-10 rounded-full object-cover border border-white/20"
+              />
+              <span className="text-lg font-semibold tracking-wide">
+                G-Collab{" "}
+                <span className="hidden md:inline text-sm text-gray-300 ml-2">
+                  Online Collaborative Code Editor
+                </span>
+              </span>
+            </div>
+
+            {/* NAVIGATION (Moved to Right) */}
+            <nav className="hidden md:flex items-center gap-8 text-sm text-gray-300 ml-auto">
+              <button
+                onClick={() => navigate("/Feature")}
+                className="hover:text-white transition"
+              >
+                Feature
+              </button>
+              <button
+                onClick={() => navigate("/About")}
+                className="hover:text-white transition"
+              >
+                About
+              </button>
+            </nav>
+
+            {/* RIGHT SIDE BUTTONS */}
+            <div className="flex items-center gap-4 ml-8">
+              <button
+                onClick={() => navigate("/login")}
+                className="hidden md:block text-sm text-gray-300 hover:text-white transition"
+              >
+                Login
+              </button>
+
+              <button
+                onClick={() => navigate("/register")}
+                className="px-5 py-2 rounded-lg bg-gradient-to-r from-blue-500 to-purple-600 text-white text-sm font-medium hover:opacity-90 transition"
+              >
+                Get Started
+              </button>
+            </div>
+
+          </div>
+        </header>
+
+        {/* Rest of your content remains EXACTLY the same */}
+
+
         {/* Animated Background Elements */}
         <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-blue-600/20 rounded-full blur-[120px] animate-pulse"></div>
         <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-purple-600/20 rounded-full blur-[120px] animate-pulse-slow"></div>
@@ -43,7 +106,7 @@ const Intro = () => {
               onClick={() => navigate("/register")}
               className="group relative px-8 py-4 w-full sm:w-auto bg-white text-black font-bold rounded-xl overflow-hidden transition-all hover:scale-105 active:scale-95"
             >
-              <span className="relative z-10">Get Started Free</span>
+              <span className="relative z-10">Get Start</span>
               <div className="absolute inset-0 bg-gradient-to-r from-blue-100 to-purple-100 opacity-0 group-hover:opacity-100 transition-opacity"></div>
             </button>
           
@@ -80,7 +143,7 @@ const Intro = () => {
             <div className="h-1/2 group rounded-3xl border border-white/10 bg-gradient-to-br from-purple-900/20 to-transparent p-6 hover:border-pink-500/50 transition-all">
                 <div className="w-10 h-10 mb-4 rounded-lg bg-pink-500/20 flex items-center justify-center text-pink-400">💻</div>
                 <h3 className="text-xl font-bold mb-2">Multi-Lang Support</h3>
-                <p className="text-sm text-gray-500">Here 5 Languages supported: JavaScript, Python, C++, Go, Rust</p>
+                <p className="text-sm text-gray-500">Here 5 Languages supported: JavaScript, Python, C++</p>
             </div>
           </div>
         </div>

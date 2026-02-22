@@ -3,23 +3,28 @@ import Intro from "./pages/Intro";
 import Register from "./pages/Register";
 import CodeEditor from "./pages/CodeEditor";
 import ProtectedRouter from "./middleWare/ProtectedRouter";
-
+import About from "./pages/About";
+import Feature from "./pages/Feature";
 
 const App = () => {
   return (
     <Router>
       <Routes>
 
-        {/* 🔰 Intro Page */}
+        {/* Home */}
         <Route path="/" element={<Intro />} />
 
-        {/* 🧾 Register Page */}
+        {/* About */}
+        <Route path="/about" element={<About />} />
+        {/* Feature */}
+        <Route path="/feature" element={<Feature />} />
+        {/* Register */}
         <Route path="/register" element={<Register />} />
 
-        {/* 🧾 Register with Room ID */}
+        {/* Register with Room ID */}
         <Route path="/:roomId" element={<Register />} />
 
-        {/* 💻 Code Editor (Protected) */}
+        {/* Protected Code Editor */}
         <Route
           path="/code/:roomId"
           element={

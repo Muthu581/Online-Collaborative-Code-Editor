@@ -6,11 +6,11 @@ import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { MdContentCopy, MdClose } from "react-icons/md";
 
 
-
 import { userAtom } from "../atoms/userAtom";
 import { socketAtom } from "../atoms/socketAtom";
 import { connectedUsersAtom } from "../atoms/connectedUsersAtom";
 import { IP_ADDRESS } from "../Globle";
+
 
 const CodeEditor: React.FC = () => {
   /* ---------------- STATE ---------------- */
@@ -35,6 +35,8 @@ const CodeEditor: React.FC = () => {
   const params = useParams();
 
   const isDark = theme === "dark";
+
+  
 
   /* ---------------- SOCKET INIT ---------------- */
   useEffect(() => {
