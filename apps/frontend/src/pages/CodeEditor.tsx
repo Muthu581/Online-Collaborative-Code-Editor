@@ -38,7 +38,7 @@ const CodeEditor: React.FC = () => {
   const isDark = theme === "dark";
 
   const [editorMode, setEditorMode] = useState<"public" | "private">("public");
-const [privateCode, setPrivateCode] = useState("// Your private code...");
+  const [privateCode, setPrivateCode] = useState("// Your private code...");
   
   /* ---------------- SOCKET INIT ---------------- */
   useEffect(() => {
@@ -286,19 +286,33 @@ const handleEditorMount = (editor: any) => {
 
         {/* ===== MAIN PANEL ===== */}
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-3 sm:gap-4 flex-1 min-h-0">
-<h2 className="text-sm font-bold">
-  {editorMode === "public" ? "🌐 Public Editor" : "🔒 Private Editor"}
-</h2>
-          {/* CODE EDITOR */}
-          <div className="lg:col-span-3 rounded-xl overflow-hidden border 
-  shadow-2xl ring-2 ring-blue-500/40 hover:ring-blue-400 transition-all">
-  <MonacoEditor
-  key={editorMode}   // ⭐ VERY IMPORTANT
-  value={editorMode === "public" ? code : privateCode}
-  language={language}
-  theme={isDark ? "vs-dark" : "vs-light"}
-  onMount={handleEditorMount}
-/>
+{/* CODE EDITOR SECTION */}
+<div className="lg:col-span-3 flex flex-col gap-2">
+
+  {/* Editor Label */}
+  <h2 className={`text-sm font-bold px-2 py-1 rounded w-fit ${
+    editorMode === "public"
+      ? "bg-blue-600/20 text-blue-400 border border-blue-500/30"
+      : "bg-green-600/20 text-green-400 border border-green-500/30"
+  }`}>
+    {editorMode === "public" ? "🌐 Public Editor" : "🔒 Private Editor"}
+  </h2>
+
+  {/* Editor */}
+  <div className="rounded-xl overflow-hidden border 
+    shadow-2xl ring-2 ring-blue-500/40 hover:ring-blue-400 transition-all flex-1">
+
+    <MonacoEditor
+      key={editorMode}
+      value={editorMode === "public" ? code : privateCode}
+      language={language}
+      theme={isDark ? "vs-dark" : "vs-light"}
+      onMount={handleEditorMount}
+      height="100%"
+    />
+
+  </div>
+
 </div>
 
           {/* SIDE PANEL */}
