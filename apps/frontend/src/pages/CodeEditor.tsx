@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import MonacoEditor from "@monaco-editor/react";
 import { useRecoilState } from "recoil";
 import { useNavigate, useParams } from "react-router-dom";
-import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";0
 import { MdContentCopy, MdClose } from "react-icons/md";
 
 
@@ -10,6 +10,7 @@ import { userAtom } from "../atoms/userAtom";
 import { socketAtom } from "../atoms/socketAtom";
 import { connectedUsersAtom } from "../atoms/connectedUsersAtom";
 import { IP_ADDRESS } from "../Globle";
+
 
 
 const CodeEditor: React.FC = () => {
@@ -36,8 +37,9 @@ const CodeEditor: React.FC = () => {
 
   const isDark = theme === "dark";
 
+  const [editorMode, setEditorMode] = useState<"public" | "private">("public");
+const [privateCode, setPrivateCode] = useState("// Your private code...");
   
-
   /* ---------------- SOCKET INIT ---------------- */
   useEffect(() => {
     if (!socket) {
@@ -64,7 +66,12 @@ const CodeEditor: React.FC = () => {
       const data = JSON.parse(event.data);
 
       if (data.type === "users") setConnectedUsers(data.users);
-      if (data.type === "code") setCode(data.code);
+     if (data.type === "code") {
+  // Only update public editor
+  if (editorMode === "public") {
+    setCode(data.code);
+  }
+}
       if (data.type === "input") setInput(data.input);
       if (data.type === "language") setLanguage(data.language);
 
@@ -126,7 +133,7 @@ const CodeEditor: React.FC = () => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          code,
+  code: editorMode === "public" ? code : privateCode,
           language,
           input,
           roomId: user.roomId,
@@ -158,22 +165,27 @@ const CodeEditor: React.FC = () => {
       handleButtonStatus("Run Code", false);
     }
   };
+const handleEditorMount = (editor: any) => {
+  editor.onDidChangeModelContent(() => {
+    const value = editor.getValue();
 
-  const handleEditorMount = (editor: any) => {
-    editor.onDidChangeModelContent(() => {
-      const value = editor.getValue();
+    if (editorMode === "public") {
       setCode(value);
 
       socket?.send(
-        JSON.stringify({
-          type: "code",
-          code: value,
-          roomId: user.roomId,
-        })
-      );
-    });
-  };
-
+  JSON.stringify({
+    type: "code",
+    code: value,
+    roomId: user.roomId,
+    visibility: editorMode // public or private
+  })
+);
+    } else {
+      // Private mode → do NOT send to server
+      setPrivateCode(value);
+    }
+  });
+};
   /* ---------------- UI ---------------- */
   return (
     <div
@@ -234,6 +246,29 @@ const CodeEditor: React.FC = () => {
         ➕ Invite
       </button>
     )}
+    <div className="flex gap-2">
+  <button
+    onClick={() => setEditorMode("public")}
+    className={`px-3 py-1 rounded ${
+      editorMode === "public"
+        ? "bg-blue-600 text-white"
+        : "bg-gray-600 text-gray-200"
+    }`}
+  >
+    🌐 Public
+  </button>
+
+  <button
+    onClick={() => setEditorMode("private")}
+    className={`px-3 py-1 rounded ${
+      editorMode === "private"
+        ? "bg-green-600 text-white"
+        : "bg-gray-600 text-gray-200"
+    }`}
+  >
+    🔒 Private
+  </button>
+</div>
 
     <button
       onClick={handleSubmit}
@@ -251,17 +286,19 @@ const CodeEditor: React.FC = () => {
 
         {/* ===== MAIN PANEL ===== */}
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-3 sm:gap-4 flex-1 min-h-0">
-
+<h2 className="text-sm font-bold">
+  {editorMode === "public" ? "🌐 Public Editor" : "🔒 Private Editor"}
+</h2>
           {/* CODE EDITOR */}
           <div className="lg:col-span-3 rounded-xl overflow-hidden border 
   shadow-2xl ring-2 ring-blue-500/40 hover:ring-blue-400 transition-all">
   <MonacoEditor
-    value={code}
-    language={language}
-    theme={isDark ? "vs-dark" : "vs-light"}
-    className="h-[50vh] sm:h-[60vh] lg:h-[75vh]"
-    onMount={handleEditorMount}
-  />
+  key={editorMode}   // ⭐ VERY IMPORTANT
+  value={editorMode === "public" ? code : privateCode}
+  language={language}
+  theme={isDark ? "vs-dark" : "vs-light"}
+  onMount={handleEditorMount}
+/>
 </div>
 
           {/* SIDE PANEL */}
